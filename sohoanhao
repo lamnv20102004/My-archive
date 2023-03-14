@@ -1,0 +1,74 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+map<long long int, int> mp; // to store prime factors and their frequency
+
+void primeFactors(long long int n)
+{
+    // counting the number of 2s that divide n
+    while (n % 2 == 0)
+    {
+        mp[2] = mp[2] + 1;
+        n = n / 2;
+    }
+
+    long long int root = sqrt(n);
+    // n must be odd at this point.  So we can skip every even number next
+    for (long long int i = 3; i <= root; i = i + 2)
+    {
+        // While i divides n, count frequency of i prime factor and divide n
+        while (n % i == 0)
+        {
+            mp[i] = mp[i] + 1;
+            n = n / i;
+        }
+    }
+
+    // This condition is to handle the case when n is a prime number
+    // greater than 2
+    if (n > 2)
+    {
+        mp[n] = mp[n] + 1;
+    }
+}
+
+long long int pow(long long int base, long long int exp)
+{
+    long long int result = 1;
+    while (exp > 0)
+    {
+        if (exp & 1)
+            result = (result * base);
+        exp >>= 1;
+        base = (base * base);
+    }
+    return result;
+}
+
+int main()
+{
+    long long int num, p, a, sum;
+
+    while (scanf("%lld", &num) != EOF && num)
+    {
+        primeFactors(num);
+        sum = 1;
+
+        map<long long int, int>::iterator i;
+        for (i = mp.begin(); i != mp.end(); i++)
+        {
+            p = i->first;
+            a = i->second;
+            sum = sum * ((pow(p, a + 1) - 1) / (p - 1));
+        }
+
+        if (sum == 2 * num)
+            printf("YES\n");
+        else
+            printf("NO\n");
+
+        mp.clear();
+    }
+
+    return 0;
+}
