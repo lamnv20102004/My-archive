@@ -1,0 +1,89 @@
+#include <stdio.h>
+#include <stdbool.h>
+#define MIN(a,b) ((a)<(b)?(a):(b))
+#define MAX_SIZE 100000
+
+struct Node {
+    int val, row, col;
+};
+
+struct HashTable {
+    struct Node arr[MAX_SIZE];
+    int size;
+};
+
+void initHashTable(struct HashTable* ht) {
+    ht->size = 0;
+}
+
+int getHash(int val, int row, int col) {
+    return ((val * 7) ^ (row * 11) ^ (col * 13)) % MAX_SIZE;
+}
+
+void put(struct HashTable* ht, struct Node node) {
+    int idx = getHash(node.val, node.row, node.col);
+    while (ht->arr[idx].val != 0 && (ht->arr[idx].val != node.val || ht->arr[idx].row != node.row || ht->arr[idx].col != node.col)) {
+        idx = (idx+1) % MAX_SIZE;
+    }
+    ht->arr[idx] = node;
+    ht->size++;
+}
+
+bool exists(struct HashTable* ht, int val, int row, int col) {
+    int idx = getHash(val, row, col);
+    while (ht->arr[idx].val != 0) {
+        if (ht->arr[idx].val == val && ht->arr[idx].row == row && ht->arr[idx].col == col) {
+            return true;
+        }
+        idx = (idx+1) % MAX_SIZE;
+    }
+    return false;
+}
+
+int main() {
+    int t;
+    scanf("%d", &t);
+    while (t--) {
+        int n, m, count = 0;
+        scanf("%d %d", &n, &m);
+
+        // read in the input matrix and initialize hash table
+        int matrix[n][m];
+        struct HashTable ht;
+        initHashTable(&ht);
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < m; j++) {
+                scanf("%d", &matrix[i][j]);
+            }
+        }
+
+        // iterate over the matrix and examine non-zero elements
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < m; j++) {
+                int current = matrix[i][j];
+                if (current != 0) {
+                    // check if current is already in the hash table
+                    if (exists(&ht, current, i, j)) {
+                        // find other matching elements and increment count
+                        for (int k = 0; k < MIN(n, m); k++) {
+                            if (k != i && k != j) {
+                                if (matrix[k][j] == current && exists(&ht, current, k, j) && exists(&ht, current, k, i)) {
+                                    count++;
+                                }
+                                else if (matrix[i][k] == current && exists(&ht, current, i, k) && exists(&ht, current, k, j)) {
+                                    count++;
+                                }
+                            }
+                        }
+                    } else {
+                        struct Node node = { current, i, j };
+                        put(&ht, node);
+                    }
+                }
+            }
+        }
+
+        printf("%d\n", count);
+    }
+    return 0;
+}
