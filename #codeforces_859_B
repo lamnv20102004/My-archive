@@ -1,0 +1,57 @@
+#include<bits/stdc++.h>
+using namespace std;
+namespace wjt_function{
+	long long read(){
+		long long x=0,sgn=1;char ch=getchar();
+		while(ch<'0' || ch>'9'){if(ch=='-')sgn=-1;ch=getchar();}
+		while(ch>='0' && ch<='9'){x=(x<<3)+(x<<1)+(ch&15);ch=getchar();}
+		return x*sgn;
+	}
+	long long cpow(long long n,long long k){
+		long long p=1;
+		for(long long i=1;i<=k;i++)p*=n;
+		return p;
+	}
+	long long gcd(long long x,long long y){
+		if(x%y==0)return y;
+		return gcd(y,x%y);
+	}
+	long long lcm(long long x,long long y){
+		return x*y/gcd(x,y);
+	}
+	long long quickpow(long long a,long long b,long long c){
+		long long ans=1;
+		while(b>0){
+			if(b%2==1)ans=(ans*a)%c;
+			a=(a*a)%c;
+			b=b/2;
+		}
+		return ans;
+	}
+	void write(long long n,bool p){
+		if(n<0){putchar('-');n=-n;}
+		if(n==0){if(p)putchar('0');return;}
+		write(n/10,0);putchar(n%10+'0');
+	}
+	void print(string st){
+		for(long long i=0;i<st.size();i++){
+			putchar(st[i]);
+		}
+	}
+}
+using namespace wjt_function;
+long long t,n,a[110],x,y;
+int main(){
+	t=read();
+	while(t--){
+		n=read();x=0;y=0;
+		for(int i=1;i<=n;i++){
+			a[i]=read();
+			if(a[i]%2==0)x+=a[i];
+			else y+=a[i];
+		}
+		if(x>y)cout<<"YES"<<endl;
+		else cout<<"NO"<<endl;
+	}
+	return 0;
+}
