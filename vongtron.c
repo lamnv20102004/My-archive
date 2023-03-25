@@ -1,6 +1,6 @@
 #include<stdio.h>
 
-int count_pairs(char a, char input[]) {
+int count_pairs(char a, char input[], int check[26]) {
 
   int pairs = 0;
 
@@ -23,7 +23,7 @@ int count_pairs(char a, char input[]) {
   }
 
 
-  char prev = '\0'; 
+/*  char prev = '\0'; 
   for (int i = a1_index + 1; i < a2_index; i++) {
 
     if (input[i] == prev) {
@@ -34,6 +34,21 @@ int count_pairs(char a, char input[]) {
       prev = input[i];
     }
   }
+  */
+
+ int prev[26]={0};
+
+ for (int i=a1_index + 1; i < a2_index; i++){
+  if(check[input[i]-'A']<2){
+    prev[input[i]-'A']++;
+    check[input[i]-'A']++;
+  }
+ }
+ for(int i = 0; i < 26; i++){
+  if(prev[i]==2){
+    pairs++;
+  }
+ }
 
   return pairs;
 }
@@ -43,12 +58,13 @@ int total_pairs(char input[]) {
 
 
    int total = 0;
+   int check[26]={0};
 
    for (char a = 'A'; a <= 'Z'; a++) {
-     total += count_pairs(a, input);
+     total += count_pairs(a, input, check);
    }
 
-   total /= 2;
+   //total /= 2;
 
    return total;
 }
