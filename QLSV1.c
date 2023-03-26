@@ -19,16 +19,13 @@ void add_new(int num_new_students) {
         scanf("%s %lf %lf %lf", students[num_students].student_name, &students[num_students].subject_a, &students[num_students].subject_b, &students[num_students].subject_c);
         num_students++;
     }
+    printf("%d\n", num_new_students);
 }
 
 void update_score(int student_code) {
-    int i;
-    for (i = 0; i < num_students; i++) {
-        if (students[i].student_code == student_code) {
-            scanf("%lf %lf %lf", &students[i].subject_a, &students[i].subject_b, &students[i].subject_c);
-            return;
-        }
-    }
+            scanf("%s", students[student_code].student_name);
+            scanf("%lf %lf %lf", &students[student_code].subject_a, &students[student_code].subject_b, &students[student_code].subject_c);
+    printf("%d\n",student_code);
 }
 
 int compare_students(const void *p1, const void *p2) {
@@ -44,13 +41,13 @@ void display_list() {
     qsort(students, num_students, sizeof(student), compare_students);
     for (i = 0; i < num_students; i++) {
         double total_score = students[i].subject_a + students[i].subject_b + students[i].subject_c;
-        printf("%d %s %.2lf\n", students[i].student_code, students[i].student_name, total_score);
+        printf("%d %s %.1lf %.1lf %.1lf\n", students[i].student_code, students[i].student_name, students[i].subject_a, students[i].subject_b, students[i].subject_c);
     }
 }
 
 int main() {
     int choice;
-    while (scanf("%d", &choice) != EOF) {
+    while (scanf("%d", &choice) == 1) {
         if (choice == 1) {
             int num_new_students;
             scanf("%d", &num_new_students);
