@@ -1,0 +1,65 @@
+#include <stdio.h>
+#include <stdlib.h>
+#define N 4
+
+void swap(int *a, int *b) {
+    int temp;
+    temp = *a;
+    *a = *b;
+    *b = temp;
+}
+
+void quickSort(int arr[], int lowPos, int highPos) {
+    int low_Pos = lowPos; // Local Variable - Limit of low position
+    int high_Pos = highPos; // Limit of high position
+    int * arr_ptr = (int*) arr;
+    int pivot = *(arr_ptr + ((low_Pos + high_Pos) / 2));
+    do {
+        while (*(arr_ptr + low_Pos) < pivot) low_Pos++; /*find item above pivot*/
+        while (*(arr_ptr + high_Pos) > pivot) high_Pos--; /* find item below pivot */
+
+        if (low_Pos <= high_Pos) {
+            swap((arr_ptr + low_Pos), (arr_ptr + high_Pos));
+            low_Pos++;
+            high_Pos--;
+        }
+    } while (low_Pos <= high_Pos);
+
+    //quick sort' the partitions recursively
+    if (lowPos < high_Pos)
+        quickSort(arr, lowPos, high_Pos);
+
+    if (low_Pos < highPos)
+        quickSort(arr, low_Pos, highPos);
+}
+
+int main() {
+    int arr[N][N];
+    int *arr_ptr = arr;
+    int row, column;
+
+    for (row = 0; row < N; row++) {
+        for (column = 0; column < N; column++) {
+            arr[row][column] = 1 + rand() % 10;
+        }
+    }
+
+    printf("The array before sorting :\n");
+    for (row = 0; row < N; row++) {
+        for (column = 0; column < N; column++) {
+            printf("%3d", arr[row][column]);
+        }
+        printf("\n");
+    }
+
+    quickSort(arr_ptr, 0, (N * N) - 1);
+
+    printf("\nThe array after sorting :\n");
+    for (row = 0; row < N; row++) {
+        for (column = 0; column < N; column++) {
+            printf("%3d", arr[row][column]);
+        }
+        printf("\n");
+    }
+    exit(EXIT_SUCCESS);
+}
